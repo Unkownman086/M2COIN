@@ -1,114 +1,123 @@
 // Copyright (c) 2011-2016 The Cryptonote developers
 // Copyright (c) 2014-2017 XDN-project developers
+// Copyright (c) 2019-2019 M2COIN
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
-#include <initializer_list>
+#include <limits>
 
 namespace CryptoNote {
 namespace parameters {
 
-const uint64_t CRYPTONOTE_MAX_BLOCK_NUMBER                   = 500000000;
+const uint32_t CRYPTONOTE_MAX_BLOCK_NUMBER                   = 500000000;
 const size_t   CRYPTONOTE_MAX_BLOCK_BLOB_SIZE                = 500000000;
 const size_t   CRYPTONOTE_MAX_TX_SIZE                        = 1000000000;
-const uint64_t CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX       = 0xDB; // addresses start with "0xDB"
-const size_t   CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW          = 6;
+const uint64_t CRYPTONOTE_PUBLIC_ADDRESS_BASE58_PREFIX       = 123;
+const uint32_t CRYPTONOTE_MINED_MONEY_UNLOCK_WINDOW         = 2;
 const uint64_t CRYPTONOTE_BLOCK_FUTURE_TIME_LIMIT            = 60 * 60 * 2;
 
-const size_t   BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW             = 30;
+const size_t   BLOCKCHAIN_TIMESTAMP_CHECK_WINDOW             = 60;
 
-const uint64_t MONEY_SUPPLY                                  = UINT64_C(858986905600000000);
+// MONEY_SUPPLY - total number coins to be generated
+const uint64_t MONEY_SUPPLY                                  = UINT64_C(18000000000000000042);
+const size_t MIN_MIXIN                          = 0;
+const uint8_t MANDATORY_MIXIN_BLOCK_VERSION     = 0;
+const uint32_t MIXIN_START_HEIGHT                          = 0;
+const uint32_t MANDATORY_TRANSACTION                          = 0;
+const uint32_t KILL_HEIGHT                          = 0;
+const uint64_t TAIL_EMISSION_REWARD                          = 0;
+const size_t CRYPTONOTE_COIN_VERSION                          = 0;
+const uint32_t ZAWY_DIFFICULTY_BLOCK_INDEX                 = 0;
+const uint32_t ZAWY_DIFFICULTY_LAST_BLOCK                 = 0;
+const uint64_t ZAWY_DIFFICULTY_MIN                 = 1;
+const uint32_t BUGGED_ZAWY_DIFFICULTY_BLOCK_INDEX                 = 0;
+const unsigned EMISSION_SPEED_FACTOR                         = 22;
+const uint64_t GENESIS_BLOCK_REWARD                          = UINT64_C(980000000000000000);
+static_assert(EMISSION_SPEED_FACTOR <= 8 * sizeof(uint64_t), "Bad EMISSION_SPEED_FACTOR");
 
 const size_t   CRYPTONOTE_REWARD_BLOCKS_WINDOW               = 100;
-const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE     = 200000; //size of block (bytes) after which reward for block calculated using block size
-const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V1  = 32000; //size of block (bytes) after which reward for block calculated using block size
+const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE     = 300008642; //size of block (bytes) after which reward for block calculated using block size
+const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V2  = 3200000000;
+const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_V1  = 3200000000;
+const size_t   CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_CURRENT = CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE;
 const size_t   CRYPTONOTE_COINBASE_BLOB_RESERVED_SIZE        = 600;
-const size_t   CRYPTONOTE_DISPLAY_DECIMAL_POINT              = 8;
-// COIN - number of smallest units in one coin
-const uint64_t COIN                                          = UINT64_C(100000000);  // pow(10, 8)
-const uint64_t MINIMUM_FEE                                   = UINT64_C(100000);     // pow(10, 5)
-const uint64_t DEFAULT_DUST_THRESHOLD                        = UINT64_C(100000);     // pow(10, 5)
+const size_t   CRYPTONOTE_DISPLAY_DECIMAL_POINT              = 13;
+const uint64_t MINIMUM_FEE                                   = UINT64_C(4);
+const uint64_t DEFAULT_DUST_THRESHOLD                        = UINT64_C(1000);
+const uint64_t MAX_TRANSACTION_SIZE_LIMIT                          = 200000000000;
+const uint64_t DEFAULT_FEE                          = 8;
 
-const uint64_t DIFFICULTY_TARGET                             = 240; // seconds
+const uint64_t DIFFICULTY_TARGET                             = 12; // seconds
 const uint64_t EXPECTED_NUMBER_OF_BLOCKS_PER_DAY             = 24 * 60 * 60 / DIFFICULTY_TARGET;
-const size_t   DIFFICULTY_WINDOW                             = 240; // blocks
-const size_t   DIFFICULTY_CUT                                = 30;  // timestamps to cut after sorting
-const size_t   DIFFICULTY_LAG                                = 15;
+const size_t   DIFFICULTY_WINDOW                                = 17;
+const size_t   DIFFICULTY_WINDOW_V1                          = 8640;
+const size_t   DIFFICULTY_WINDOW_V2                          = 8640;
+const size_t   DIFFICULTY_CUT                                = 0;  // timestamps to cut after sorting
+const size_t   DIFFICULTY_CUT_V1                             = 60;
+const size_t   DIFFICULTY_CUT_V2                             = 60;
+const size_t   DIFFICULTY_LAG                                = 0;  // !!!
+const size_t   DIFFICULTY_LAG_V1                             = 15;
+const size_t   DIFFICULTY_LAG_V2                             = 15;
 static_assert(2 * DIFFICULTY_CUT <= DIFFICULTY_WINDOW - 2, "Bad DIFFICULTY_WINDOW or DIFFICULTY_CUT");
 
-const uint64_t DEPOSIT_MIN_AMOUNT                            = 150 * COIN;
-const uint32_t DEPOSIT_MIN_TERM                              = 11000;
-const uint32_t DEPOSIT_MAX_TERM                              = 10 * 12 * 11000;
-const uint64_t DEPOSIT_MIN_TOTAL_RATE_FACTOR                 = 77000;
-const uint64_t DEPOSIT_MAX_TOTAL_RATE                        = 11;
-static_assert(DEPOSIT_MIN_TERM > 0, "Bad DEPOSIT_MIN_TERM");
-static_assert(DEPOSIT_MIN_TERM <= DEPOSIT_MAX_TERM, "Bad DEPOSIT_MAX_TERM");
-static_assert(DEPOSIT_MIN_TERM * DEPOSIT_MAX_TOTAL_RATE > DEPOSIT_MIN_TOTAL_RATE_FACTOR, "Bad DEPOSIT_MIN_TOTAL_RATE_FACTOR or DEPOSIT_MAX_TOTAL_RATE");
-
-const size_t   MAX_BLOCK_SIZE_INITIAL                        = CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE * 10;
+const size_t   MAX_BLOCK_SIZE_INITIAL                        = 10000000000000;
 const uint64_t MAX_BLOCK_SIZE_GROWTH_SPEED_NUMERATOR         = 100 * 1024;
 const uint64_t MAX_BLOCK_SIZE_GROWTH_SPEED_DENOMINATOR       = 365 * 24 * 60 * 60 / DIFFICULTY_TARGET;
 
 const uint64_t CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_BLOCKS     = 1;
 const uint64_t CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_SECONDS    = DIFFICULTY_TARGET * CRYPTONOTE_LOCKED_TX_ALLOWED_DELTA_BLOCKS;
 
-const uint64_t CRYPTONOTE_MEMPOOL_TX_LIVETIME                = (60 * 60 * 14); //seconds, 14 hours
-const uint64_t CRYPTONOTE_MEMPOOL_TX_FROM_ALT_BLOCK_LIVETIME = (60 * 60 * 24); //seconds, one day
+const uint64_t CRYPTONOTE_MEMPOOL_TX_LIVETIME                = 60 * 60 * 24;     //seconds, one day
+const uint64_t CRYPTONOTE_MEMPOOL_TX_FROM_ALT_BLOCK_LIVETIME = 60 * 60 * 24 * 7; //seconds, one week
 const uint64_t CRYPTONOTE_NUMBER_OF_PERIODS_TO_FORGET_TX_DELETED_FROM_POOL = 7;  // CRYPTONOTE_NUMBER_OF_PERIODS_TO_FORGET_TX_DELETED_FROM_POOL * CRYPTONOTE_MEMPOOL_TX_LIVETIME = time to forget tx
 
-const size_t   FUSION_TX_MAX_SIZE                            = CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE * 30 / 100;
+const size_t   FUSION_TX_MAX_SIZE                            = CRYPTONOTE_BLOCK_GRANTED_FULL_REWARD_ZONE_CURRENT * 30 / 100;
 const size_t   FUSION_TX_MIN_INPUT_COUNT                     = 12;
 const size_t   FUSION_TX_MIN_IN_OUT_COUNT_RATIO              = 4;
 
-const uint32_t UPGRADE_HEIGHT_V2                             = 136212;
-const uint32_t UPGRADE_HEIGHT_V3                             = 317950;
-const uint32_t UPGRADE_HEIGHT_V4                             = 338000;
+const uint32_t KEY_IMAGE_CHECKING_BLOCK_INDEX                = 0;
+const uint32_t UPGRADE_HEIGHT_V2                                = 1;
+const uint32_t UPGRADE_HEIGHT_V3                                = 30;
 const unsigned UPGRADE_VOTING_THRESHOLD                      = 90;               // percent
-const size_t   UPGRADE_VOTING_WINDOW                         = EXPECTED_NUMBER_OF_BLOCKS_PER_DAY;  // blocks
-const size_t   UPGRADE_WINDOW                                = EXPECTED_NUMBER_OF_BLOCKS_PER_DAY;  // blocks
+const uint32_t UPGRADE_VOTING_WINDOW                         = EXPECTED_NUMBER_OF_BLOCKS_PER_DAY;  // blocks
+const uint32_t UPGRADE_WINDOW                                = EXPECTED_NUMBER_OF_BLOCKS_PER_DAY;  // blocks
 static_assert(0 < UPGRADE_VOTING_THRESHOLD && UPGRADE_VOTING_THRESHOLD <= 100, "Bad UPGRADE_VOTING_THRESHOLD");
 static_assert(UPGRADE_VOTING_WINDOW > 1, "Bad UPGRADE_VOTING_WINDOW");
 
-const char     CRYPTONOTE_BLOCKS_FILENAME[]                  = "blocks.dat";
-const char     CRYPTONOTE_BLOCKINDEXES_FILENAME[]            = "blockindexes.dat";
-const char     CRYPTONOTE_BLOCKSCACHE_FILENAME[]             = "blockscache.dat";
+const char     CRYPTONOTE_BLOCKS_FILENAME[]                  = "blocks.bin";
+const char     CRYPTONOTE_BLOCKINDEXES_FILENAME[]            = "blockindexes.bin";
 const char     CRYPTONOTE_POOLDATA_FILENAME[]                = "poolstate.bin";
 const char     P2P_NET_DATA_FILENAME[]                       = "p2pstate.bin";
-const char     CRYPTONOTE_BLOCKCHAIN_INDICES_FILENAME[]      = "blockchainindices.dat";
 const char     MINER_CONFIG_FILE_NAME[]                      = "miner_conf.json";
+const char     GENESIS_COINBASE_TX_HEX[]                     = "010201ff00010f02a2ae71aedf8e0e2d10553e50db66fa02e2713432e7896a0ed3ebfadaf4b1a7682101a524a2c17ac0ee4ac5a96cfc7134437f42fbe9a896d8ca6355e870bdeeb46e42";
 } // parameters
 
-const uint64_t START_BLOCK_REWARD                            = (UINT64_C(320000) * parameters::COIN);
-const uint64_t MIN_BLOCK_REWARD                              = (UINT64_C(150) * parameters::COIN);
-const uint64_t REWARD_HALVING_INTERVAL                       = (UINT64_C(11000));
-
-const char     CRYPTONOTE_NAME[]                             = "digitalnote";
-const char     GENESIS_COINBASE_TX_HEX[]                     = "010601ff0001808088a5a9a307029b2e4c0281c0b02e7c53291a94d1d0cbff8883f8024f5142ee494ffbbd088071210138dc57b313e2560fa75f5d7c9a6398800855220aefb3603bc70826adc83e0cc1";
-const uint32_t GENESIS_NONCE                                 = 420;
+const char     CRYPTONOTE_NAME[]                             = "M2COIN";
 
 const uint8_t  TRANSACTION_VERSION_1                         =  1;
 const uint8_t  TRANSACTION_VERSION_2                         =  2;
+const uint8_t  CURRENT_TRANSACTION_VERSION                   =  TRANSACTION_VERSION_1;
 const uint8_t  BLOCK_MAJOR_VERSION_1                         =  1;
 const uint8_t  BLOCK_MAJOR_VERSION_2                         =  2;
 const uint8_t  BLOCK_MAJOR_VERSION_3                         =  3;
-const uint8_t  BLOCK_MAJOR_VERSION_4                         =  4;
 const uint8_t  BLOCK_MINOR_VERSION_0                         =  0;
 const uint8_t  BLOCK_MINOR_VERSION_1                         =  1;
 
 const size_t   BLOCKS_IDS_SYNCHRONIZING_DEFAULT_COUNT        =  10000;  //by default, blocks ids count in synchronizing
-const size_t   BLOCKS_SYNCHRONIZING_DEFAULT_COUNT            =  128;    //by default, blocks count in blocks downloading
+const size_t   BLOCKS_SYNCHRONIZING_DEFAULT_COUNT            =  100;    //by default, blocks count in blocks downloading
 const size_t   COMMAND_RPC_GET_BLOCKS_FAST_MAX_COUNT         =  1000;
 
-const int      P2P_DEFAULT_PORT                              = 42080;
-const int      RPC_DEFAULT_PORT                              = 42081;
+const int      P2P_DEFAULT_PORT                              =  21397;
+const int      RPC_DEFAULT_PORT                              =  21398;
 
 const size_t   P2P_LOCAL_WHITE_PEERLIST_LIMIT                =  1000;
 const size_t   P2P_LOCAL_GRAY_PEERLIST_LIMIT                 =  5000;
 
-const size_t   P2P_CONNECTION_MAX_WRITE_BUFFER_SIZE          = 64 * 1024 * 1024; // 64 MB
+const size_t   P2P_CONNECTION_MAX_WRITE_BUFFER_SIZE          = 32 * 1024 * 1024; // 32 MB
 const uint32_t P2P_DEFAULT_CONNECTIONS_COUNT                 = 8;
 const size_t   P2P_DEFAULT_WHITELIST_CONNECTIONS_PERCENT     = 70;
 const uint32_t P2P_DEFAULT_HANDSHAKE_INTERVAL                = 60;            // seconds
@@ -118,60 +127,71 @@ const uint32_t P2P_DEFAULT_CONNECTION_TIMEOUT                = 5000;          //
 const uint32_t P2P_DEFAULT_PING_CONNECTION_TIMEOUT           = 2000;          // 2 seconds
 const uint64_t P2P_DEFAULT_INVOKE_TIMEOUT                    = 60 * 2 * 1000; // 2 minutes
 const size_t   P2P_DEFAULT_HANDSHAKE_INVOKE_TIMEOUT          = 5000;          // 5 seconds
-const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "85ae8734f90bc1ee295ceb0ec05a49852d4dbbc9d1c27a619b5f4bdf26a0196e";
+const char     P2P_STAT_TRUSTED_PUB_KEY[]                    = "";
 
-const std::initializer_list<const char*> SEED_NODES = {
-  "64.34.219.46:42080",
-  "66.172.27.42:42080",
-  "66.172.27.6:42080",
-  "76.74.170.207:42080",
-  "76.74.219.163:42080",
-};
+const char* const SEED_NODES[] = { "10.0.0.3:21397", "10.0.0.196:21397", "10.0.0.195:21397" };
+
 
 struct CheckpointData {
-  uint32_t height;
+  uint32_t index;
   const char* blockId;
 };
 
-#ifdef __GNUC__
-__attribute__((unused))
-#endif
-
-// You may add here other checkpoints using the following format:
-// {<block height>, "<block hash>"},
 const std::initializer_list<CheckpointData> CHECKPOINTS = {
-    { 1100, "990a83b3e77ba5def86311da34793e09fa3b0a2875571bd59449173fddf4e129" },
-    { 4200, "76af92fc41eadf9c99df91efc08011d0fce6f3f55b131da2449c187f432f91f7" },
-    { 11000, "970c15459e4d484166c36e303fcf35886e14633b40b1fe4e3f250eb03eaca1f8" },
-    { 22000, "ae9ab36c4ff2cf215d49ffa4358d108dd777b8897c2d873a064dc103fea2b5ab" },
-    { 33000, "3fac95a900e65391d693e2cb331a26c757595baac133b9fa24936dd50fc7465f" },
-    { 44000, "071a97648427ad25ec206ae7101534c9b011376f05dee04780b5edb22f9a919e" },
-    { 47000, "a2fda9ea94260ed7177aec5b74802606bc7800d4a1713f761ac71a0883b4b480" },
-    { 55000, "57f48bc9b2dddace94bddc8858cf1cdf5e68cc0db763d7ebcab71b388755e0ce" },
-    { 66000, "90a2bc9e75503d386d41c48e698d474c337291f8c4417d63e90a8b5727f06320" },
-    { 80550, "169e6b813b8ee072735bf7f7dc45b9b712b89a1317d1a4e672f6bba785a564fc" },
-    { 99000, "2a83ce4fbd12ccb2eb60869d11d6b4212e8a810ab33408a2feaa3066d2853d9f" },
-    { 122000, "926e915d84af28a8908809ae94f75bdea50d99d2d1a67fd5598bb91ccdf62c83" },
-    { 132000, "b58a6b387d3120ea11061642a6a78a9a4b7800b77a44fae7ec1c73b60f2e375f" },
-    { 136212, "5a935b048194d8b6ffb33b744c73cbe632da4f3c4d5e4c4488967d9431ba2a36" },
-    { 136213, "336b687fdb96457cf4060072f76fc9e4e9281744822e0892c9ea128445bbebc7" },
-    { 137000, "ae73be718076ab00371f81fa5f604c9e020f25abcb48f85b631bde0cabaff048" },
-    { 143000, "2a9dc9638f091078a67d085ae97caa28f1061c0ae088463977f3df6435a9b585" },
-    { 145000, "4b2bbfc07f42ae151119f732e568cba3bee2a0031e3eded2c94958b830e07e5a" },
-    { 147000, "fe3eaf9a565426fe0498377157b62edd3c139e4b18803a4ca9bb6f78a6c0686b" },
-    { 156700, "c3f250d8009ac15860095835e3f3c696c470fada129cae6e0946e1cdc1d2f51a" },
-    { 159200, "fa120a1ef19a13c3fc629a781e37e31617c36e0b99321e3959a7e3f25ff281d3" },
-    { 222000, "f74f764b1f3df8ab039657f73486fcc3a91dab2018e38b5c1d7838bb6a947711" },
-    { 252525, "7798185c79c06fe58f04f69d7f5f0b0d2a08003fd1c9b11707b5d54d63b26832" },
-    { 253000, "43c3acbd7e235d2efbf9409c8c3e1bfdc29780b200804608b668f8d5b2251220" },
-    { 258852, "9f2b0ff556c8088b498928e835134727aede39832bf3c66cc439384b12bab289" },
-    { 317000, "775fe833c74ca0e0de22a259364379e83a1b228c99cfdabc52e50beabacf08d3" },
-    { 336336, "0075d20bf2b378750a5cc34baa208f75bf3119c5cb009b2b4182e733dff34b67" },
-    { 360000, "296cf882a4d14a12de1403ff9326b446ba3694b032fa46e33136a58903897475" },
-    { 385000, "79de0d2a49a2ad3407003931c0caa2cd040594519fcaf955ae724909334883ee" },
-    { 418020, "23f02d8af6318504659e94c55047ac464ad35d42ca4af5668c279f1e484fad19" },
+  {79000,  "cae33204e624faeb64938d80073bb7bbacc27017dc63f36c5c0f313cad455a02"},
+  {140000, "993059fb6ab92db7d80d406c67a52d9c02d873ca34b6290a12b744c970208772"},
+  {200000, "a5f74c7542077df6859f48b5b1f9c3741f29df38f91a47e14c94b5696e6c3073"},
+  {230580, "32bd7cb6c68a599cf2861941f29002a5e203522b9af54f08dfced316f6459103"},
+  {260000, "f68e70b360ca194f48084da7a7fd8e0251bbb4b5587f787ca65a6f5baf3f5947"},
+  {300000, "8e80861713f68354760dc10ea6ea79f5f3ff28f39b3f0835a8637463b09d70ff"},
+  {390285, "e00bdc9bf407aeace2f3109de11889ed25894bf194231d075eddaec838097eb7"},
+  {417000, "2dc96f8fc4d4a4d76b3ed06722829a7ab09d310584b8ecedc9b578b2c458a69f"},
+  {427193, "00feabb08f2d5759ed04fd6b799a7513187478696bba2db2af10d4347134e311"},
+  {453537, "d17de6916c5aa6ffcae575309c80b0f8fdcd0a84b5fa8e41a841897d4b5a4e97"},
+  {462250, "13468d210a5ec884cf839f0259f247ccf3efef0414ac45172033d32c739beb3e"},
+  {468000, "251bcbd398b1f593193a7210934a3d87f692b2cb0c45206150f59683dd7e9ba1"},
+  {480200, "363544ac9920c778b815c2fdbcbca70a0d79b21f662913a42da9b49e859f0e5b"},
+  {484500, "5cdf2101a0a62a0ab2a1ca0c15a6212b21f6dbdc42a0b7c0bcf65ca40b7a14fb"},
+  {506000, "3d54c1132f503d98d3f0d78bb46a4503c1a19447cb348361a2232e241cb45a3c"},
+  {544000, "f69dc61b6a63217f32fa64d5d0f9bd920873f57dfd79ebe1d7d6fb1345b56fe0"},
+  {553300, "f7a5076b887ce5f4bb95b2729c0edb6f077a463f04f1bffe7f5cb0b16bb8aa5f"},
+  {580000, "93aea06936fa4dc0a84c9109c9d5f0e1b0815f96898171e42fd2973d262ed9ac"},
+  {602000, "a05fd2fccbb5f567ece940ebb62a82fdb1517ff5696551ae704e5f0ef8edb979"},
+  {623000, "7c92dd374efd0221065c7d98fce0568a1a1c130b5da28bb3f338cdc367b93d0b"},
+  {645000, "1eeba944c0dd6b9a1228a425a74076fbdbeaf9b657ba7ef02547d99f971de70d"},
+  {667000, "a020c8fcaa567845d04b520bb7ebe721e097a9bed2bdb8971081f933b5b42995"},
+  {689000, "212ec2698c5ebd15d6242d59f36c2d186d11bb47c58054f476dd8e6b1c7f0008"},
+  {713000, "a03f836c4a19f907cd6cac095eb6f56f5279ca2d1303fb7f826750dcb9025495"},
+  {750300, "5117631dbeb5c14748a91127a515ecbf13f6849e14fda7ee03cd55da41f1710c"},
+  {780000, "8dd55a9bae429e3685b90317281e633917023d3512eb7f37372209d1a5fc1070"},
+  {785500, "de1a487d70964d25ed6f7de196866f357a293e867ee81313e7fd0352d0126bdd"},
+  {789000, "acef490bbccce3b7b7ae8554a414f55413fbf4ca1472c6359b126a4439bd9f01"},
+  {796000, "04e387a00d35db21d4d93d04040b31f22573972a7e61d72cc07d0ab69bcb9c44"},
+  {800000, "d7fa4eea02e5ce60b949136569c0ea7ac71ea46e0065311054072ac415560b86"},
+  {804000, "bcc8b3782499aae508c40d5587d1cc5d68281435ea9bfc6804a262047f7b934d"},
+  {810500, "302b2349f221232820adc3dadafd8a61b035491e33af669c78a687949eb0a381"},
+  {816000, "32b7fdd4e4d715db81f8f09f4ba5e5c78e8113f2804d61a57378baee479ce745"},
+  {822000, "a3c9603c6813a0dc0efc40db288c356d1a7f02d1d2e47bee04346e73715f8984"},
+  {841000, "2cffb6504ee38f708a6256a63585f9382b3b426e64b4504236c70678bd160dce"},
+  {890000, "a7132932ea31236ce6b8775cd1380edf90b5e536ee4202c77b69a3d62445fcd2"},
+  {894000, "ae2624ea1472ecc36de0d812f21a32da2d4afc7d5770830083cbaf652209d316"},
+  {979000, "d8290eb4eedbe638f5dbadebcaf3ea434857ce96168185dc04f75b6cc1f4fda6"},
+  {985548, "8d53e0d97594755a621feaee0978c0431fc01f42b85ff76a03af8641e2009d57"},
+  {985549, "dc6f8d9319282475c981896b98ff9772ae2499533c2302c32faf65115aaf2554"},
+  {996000, "c9a9243049acc7773a3e58ae354d66f8ea83996ece93ffbaad0b8b42b5fb7223"},
+  {1021000, "a0c4107d327ffeb31dabe135a7124191b0a5ef7c4fa34f06babc1f0546ab938e"},
+  {1039000, "8c9208940fc92539fac98cc658b95d240635f8729ee8bd756d6bdbab52de2c04"},
+  {1170000, "f48441157749e89687dfa6edec2128ff332bdaa9eb139f2330a193e3139d2980"},
+  {1268000, "d49fcaec1d53095e2c244913f123bfd4b26eabb6d75aca7b77a00de8aa8ac680"},
+  {1272000, "2fb2c50328c8345d2f0a16b3ec4ea680a8a93730358494265ada9edbb9bfa1a6"},
+  {1273000, "496a9238c654d79c48d269224aa75d61f51831bae6dc744f5e709bec11c7c9f2"},
+  {1278000, "de0225cd279ca27cc8d4f8da1b5b92ba0112e48b3777b8c50301846ccfc9146b"},
+  {1283000, "826043db95e9801f038f254d223ce0d0912da269dcce1461b5f0f05ddfae9e1c"},
+  {1324000, "981e6f6871a7c295b56c5ce544adb5a7d52540ee23e15474b4357c7728952fef"},
+  {1329000, "b88ed8dfe95a19bd6377f77c01d87df9cf7bd14cd6de7ec616beca95deb1fc85"},
+  {1343000, "1696231b026b4e10412b16d65ba036c9750d287ab76da7e25efd4ba3fa9ed999"},
+  {1372000, "55e02f544df808a12d3c2809b8c7490f8b0729aef196745240e94522c69a7181"}
 };
-
 } // CryptoNote
 
 #define ALLOW_DEBUG_COMMANDS
