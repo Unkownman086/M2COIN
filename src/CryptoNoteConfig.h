@@ -153,6 +153,13 @@ struct CheckpointData {
   const char* blockId;
 };
 
+#ifdef __GNUC__
+__attribute__((unused))
+#endif
+
+// You may add here other checkpoints using the following format:
+// {<block height>, "<block hash>"},
+  
 const std::initializer_list<CheckpointData> CHECKPOINTS = {
   {79000,  "cae33204e624faeb64938d80073bb7bbacc27017dc63f36c5c0f313cad455a02"},
   {140000, "993059fb6ab92db7d80d406c67a52d9c02d873ca34b6290a12b744c970208772"},
@@ -206,7 +213,7 @@ const std::initializer_list<CheckpointData> CHECKPOINTS = {
   {1324000, "981e6f6871a7c295b56c5ce544adb5a7d52540ee23e15474b4357c7728952fef"},
   {1329000, "b88ed8dfe95a19bd6377f77c01d87df9cf7bd14cd6de7ec616beca95deb1fc85"},
   {1343000, "1696231b026b4e10412b16d65ba036c9750d287ab76da7e25efd4ba3fa9ed999"},
-  {1372000, "55e02f544df808a12d3c2809b8c7490f8b0729aef196745240e94522c69a7181"}
+  {1372000, "55e02f544df808a12d3c2809b8c7490f8b0729aef196745240e94522c69a7181"},
 };
 } // CryptoNote
 
